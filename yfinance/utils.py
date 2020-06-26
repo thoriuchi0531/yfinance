@@ -26,7 +26,6 @@ import re as _re
 import pandas as _pd
 import numpy as _np
 import sys as _sys
-import re as _re
 
 try:
     import ujson as _json
@@ -50,10 +49,8 @@ def get_json(url, proxy=None):
         if "QuoteSummaryStore" not in html:
             return {}
 
-    json_str = html.split('root.App.main =')[1].split(
-        '(this)')[0].split(';\n}')[0].strip()
-    data = _json.loads(json_str)[
-        'context']['dispatcher']['stores']['QuoteSummaryStore']
+    json_str = html.split('root.App.main =')[1].split('(this)')[0].split(';\n}')[0].strip()
+    data = _json.loads(json_str)['context']['dispatcher']['stores']['QuoteSummaryStore']
 
     # return data
     new_data = _json.dumps(data).replace('{}', 'null')
