@@ -23,8 +23,8 @@ def test_yfinance(ticketList):
         ticker = yf.Ticker(symbol)
 
         # always should have info and history for valid symbols
-        assert(ticker.info is not None and ticker.info != {})
-        assert(ticker.history(period="max").empty is False)
+        assert (ticker.info is not None and ticker.info != {})
+        assert (ticker.history(period="max").empty is False)
 
         # following should always gracefully handled, no crashes
         ticker.cashflow
@@ -43,3 +43,6 @@ if __name__ == "__main__":
 
     additional_swedish_tickets = ['HTRO.ST', 'FING-B.ST', 'TELIA.ST', 'AZA.ST', 'NDA-SE.ST']
     test_yfinance(additional_swedish_tickets)
+
+    additional_lse_tickets = ['IDTL.L']
+    test_yfinance(additional_lse_tickets)
