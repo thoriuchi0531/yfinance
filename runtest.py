@@ -44,5 +44,8 @@ if __name__ == "__main__":
     additional_swedish_tickets = ['HTRO.ST', 'FING-B.ST', 'TELIA.ST', 'AZA.ST', 'NDA-SE.ST']
     test_yfinance(additional_swedish_tickets)
 
+    additional_futures_tickets = ['FVU20.CBT']
+    test_yfinance(additional_futures_tickets)
+
     additional_lse_tickets = ['IDTL.L']
     test_yfinance(additional_lse_tickets)

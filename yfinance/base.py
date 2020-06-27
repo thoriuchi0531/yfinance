@@ -247,7 +247,7 @@ class TickerBase():
 
     # ------------------------
 
-    def _get_fundamentals(self, kind=None, proxy=None):
+    def _get_fundamentals(self, kind=None, proxy=None, ignore_holders=False):
         def cleanup(data):
             df = _pd.DataFrame(data).drop(columns=['maxAge'])
             for col in df.columns:
@@ -280,17 +280,21 @@ class TickerBase():
         data = utils.get_json(url, proxy)
 
         # holders
-        url = "{}/{}/holders".format(self._scrape_url, self.ticker)
-        holders = _pd.read_html(url)
-        self._major_holders = holders[0]
-        if len(holders) > 1:
-            self._institutional_holders = holders[1]
-            if 'Date Reported' in self._institutional_holders:
-                self._institutional_holders['Date Reported'] = _pd.to_datetime(
-                    self._institutional_holders['Date Reported'])
-            if '% Out' in self._institutional_holders:
-                self._institutional_holders['% Out'] = self._institutional_holders[
-                    '% Out'].str.replace('%', '').astype(float)/100
+        if ignore_holders:
+            self._major_holders = None
+            self._institutional_holders = None
+        else:
+            url = "{}/{}/holders".format(self._scrape_url, self.ticker)
+            holders = _pd.read_html(url)
+            self._major_holders = holders[0]
+            if len(holders) > 1:
+                self._institutional_holders = holders[1]
+                if 'Date Reported' in self._institutional_holders:
+                    self._institutional_holders['Date Reported'] = _pd.to_datetime(
+                        self._institutional_holders['Date Reported'])
+                if '% Out' in self._institutional_holders:
+                    self._institutional_holders['% Out'] = self._institutional_holders[
+                        '% Out'].str.replace('%', '').astype(float)/100
 
         # sustainability
         d = {}
@@ -413,8 +417,8 @@ class TickerBase():
             return data.to_dict()
         return data
 
-    def get_info(self, proxy=None, as_dict=False, *args, **kwargs):
-        self._get_fundamentals(proxy)
+    def get_info(self, proxy=None, as_dict=False, ignore_holders=False, *args, **kwargs):
+        self._get_fundamentals(proxy, ignore_holders=ignore_holders)
         data = self._info
         if as_dict:
             return data.to_dict()
